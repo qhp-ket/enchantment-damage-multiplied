@@ -5,29 +5,30 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public final class EnchantmentDamageMultipliedConfig {
     public static final ForgeConfigSpec SPEC;
 
-    public static final ForgeConfigSpec.BooleanValue ENABLED;
-    public static final ForgeConfigSpec.BooleanValue APPLY_ADDITION;
-    public static final ForgeConfigSpec.BooleanValue APPLY_MULTIPLY_BASE;
-    public static final ForgeConfigSpec.BooleanValue APPLY_MULTIPLY_TOTAL;
+    public static final ForgeConfigSpec.BooleanValue enabled;
+    public static final ForgeConfigSpec.BooleanValue addition;
+    public static final ForgeConfigSpec.BooleanValue multiplyBase;
+    public static final ForgeConfigSpec.BooleanValue multiplyTotal;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
-        ENABLED = builder
-            .comment("Enable enchantment damage scaling during vanilla player melee attacks.")
+        enabled = builder
+            .comment("Master switch for enchantment damage scaling.")
             .define("enabled", true);
-        APPLY_ADDITION = builder
-            .comment("Apply ADDITION attack damage modifiers to the enchantment damage bonus.")
-            .define("applyAddition", false);
-        APPLY_MULTIPLY_BASE = builder
-            .comment("Apply MULTIPLY_BASE attack damage modifiers to the enchantment damage bonus.")
-            .define("applyMultiplyBase", true);
-        APPLY_MULTIPLY_TOTAL = builder
-            .comment("Apply MULTIPLY_TOTAL attack damage modifiers to the enchantment damage bonus.")
-            .define("applyMultiplyTotal", true);
+        addition = builder
+            .comment("Apply ATTACK_DAMAGE ADDITION modifiers to the enchantment damage bonus.")
+            .define("addition", false);
+        multiplyBase = builder
+            .comment("Apply ATTACK_DAMAGE MULTIPLY_BASE modifiers to the enchantment damage bonus.")
+            .define("multiply_base", true);
+        multiplyTotal = builder
+            .comment("Apply ATTACK_DAMAGE MULTIPLY_TOTAL modifiers to the enchantment damage bonus.")
+            .define("multiply_total", true);
 
         SPEC = builder.build();
     }
 
-    private EnchantmentDamageMultipliedConfig() {}
+    private EnchantmentDamageMultipliedConfig() {
+    }
 }

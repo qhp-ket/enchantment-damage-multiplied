@@ -1,20 +1,38 @@
 # Enchantment Damage Multiplied
 
-Enchantment Damage Multiplied makes enchantment damage bonuses used by vanilla player melee attacks share selected `minecraft:generic.attack_damage` AttributeModifier operations.
+A focused Forge 1.20.1 mod that applies selected `generic.attack_damage` attribute modifier operations to the enchantment damage bonus in vanilla player melee attacks.
 
-This project is licensed under the GNU General Public License v3.0. See [LICENSE](LICENSE).
+## Damage model
 
-The mod registers a Forge `COMMON` config at `config/enchantment_damage_multiplied-common.toml`. Its defaults are:
+The mod scales the value returned by `EnchantmentHelper.getDamageBonus(ItemStack, MobType)` in `Player.attack`. It preserves Minecraft's operation order: `ADDITION` modifiers first, then each `MULTIPLY_BASE` modifier using the same adjusted base, and finally each `MULTIPLY_TOTAL` modifier in sequence. A zero enchantment bonus remains zero.
+
+## Scope
+
+Modded enchantments that contribute through the same `getDamageBonus` path are included. Custom damage paths are outside this mod's scope. Projectile damage, including arrows and thrown tridents, is not modified. The mod does not change the player's live `ATTACK_DAMAGE` attribute.
+
+## Configuration
+
+The Forge `COMMON` config is generated at `config/enchantment_damage_multiplied-common.toml`:
 
 ```toml
 enabled = true
-applyAddition = false
-applyMultiplyBase = true
-applyMultiplyTotal = true
+addition = false
+multiply_base = true
+multiply_total = true
 ```
 
-`enabled` turns this mod's scaling on or off. The three `apply...` settings independently select which `ATTACK_DAMAGE` attribute modifier operations are applied to the enchantment bonus. Forge watches the common config file and reloads valid edits while running, so a restart is normally unnecessary.
+`enabled` is the master switch. `addition`, `multiply_base`, and `multiply_total` independently control the corresponding `ATTACK_DAMAGE` modifier operation when scaling the enchantment bonus. Forge watches the common config and applies valid changes while running; a restart is normally unnecessary.
 
-This scales the bonus returned by the normal `EnchantmentHelper.getDamageBonus(ItemStack, MobType)` call inside `Player.attack`. Modded enchantments contributing through the same damage-bonus path are included automatically. Enchantments implementing their own damage path are outside this mod's scope. Projectile damage, including thrown tridents and arrows, is not handled. There is no config GUI.
+## Build
 
-Build with Java 17 using `gradlew build`. The complete release JAR (including the MixinExtras Jar-in-Jar dependency) is the JAR in `build/libs` without the `-slim` suffix. The `-slim` JAR does not bundle MixinExtras and is not the recommended release artifact.
+Requirements: Java 17, Minecraft 1.20.1, Forge 47.4.23.
+
+```text
+gradlew.bat clean build
+```
+
+The complete release JAR (including MixinExtras through Jar-in-Jar) is the JAR in `build/libs` without the `-slim` suffix. The `-slim` JAR does not bundle MixinExtras and is not the recommended release artifact.
+
+## License
+
+GNU General Public License v3.0. See [LICENSE](LICENSE).

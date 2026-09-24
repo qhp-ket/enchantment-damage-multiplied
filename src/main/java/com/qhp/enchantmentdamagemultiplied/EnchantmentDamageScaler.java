@@ -9,7 +9,7 @@ public final class EnchantmentDamageScaler {
     private EnchantmentDamageScaler() {}
 
     public static float scaleEnchantmentDamage(Player player, float original) {
-        if (!EnchantmentDamageMultipliedConfig.ENABLED.get()) {
+        if (!EnchantmentDamageMultipliedConfig.enabled.get()) {
             return original;
         }
 
@@ -23,20 +23,20 @@ public final class EnchantmentDamageScaler {
         }
 
         double base = original;
-        if (EnchantmentDamageMultipliedConfig.APPLY_ADDITION.get()) {
+        if (EnchantmentDamageMultipliedConfig.addition.get()) {
             for (AttributeModifier modifier : attribute.getModifiers(AttributeModifier.Operation.ADDITION)) {
                 base += modifier.getAmount();
             }
         }
 
         double value = base;
-        if (EnchantmentDamageMultipliedConfig.APPLY_MULTIPLY_BASE.get()) {
+        if (EnchantmentDamageMultipliedConfig.multiplyBase.get()) {
             for (AttributeModifier modifier : attribute.getModifiers(AttributeModifier.Operation.MULTIPLY_BASE)) {
                 value += base * modifier.getAmount();
             }
         }
 
-        if (EnchantmentDamageMultipliedConfig.APPLY_MULTIPLY_TOTAL.get()) {
+        if (EnchantmentDamageMultipliedConfig.multiplyTotal.get()) {
             for (AttributeModifier modifier : attribute.getModifiers(AttributeModifier.Operation.MULTIPLY_TOTAL)) {
                 value *= 1.0D + modifier.getAmount();
             }
