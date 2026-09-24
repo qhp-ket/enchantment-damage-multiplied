@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.qhp.enchantmentdamagemultiplied.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "enchantment_damage_multiplied.refmap.json",
+  "mixins": ["PlayerAttackMixin"],
+  "injectors": {"defaultRequire": 1}
+}

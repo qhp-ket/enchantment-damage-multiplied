@@ -1,0 +1,19 @@
+# Build output
+/.gradle/
+/build/
+/dist/
+/bin/
+/out/
+/run/
+/run-*/
+/libs/*.jar
+
+# IDE / tooling
+/.idea/
+/.vscode/
+*.iml
+
+# OS cruft
+Thumbs.db
+.DS_Store
+*.class

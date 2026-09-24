@@ -1,0 +1,72 @@
+plugins {
+    id 'java'
+    id 'net.minecraftforge.gradle' version '6.0.54'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = "${mod_id}-forge-${minecraft_version}"
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: 'official', version: minecraft_version
+    copyIdeResources = true
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    annotationProcessor 'org.spongepowered:mixin:0.8.5'
+    annotationProcessor 'com.google.code.gson:gson:2.10'
+    annotationProcessor 'com.google.guava:guava:31.1-jre'
+    annotationProcessor 'org.ow2.asm:asm-tree:9.9.1'
+    annotationProcessor 'org.ow2.asm:asm-commons:9.9.1'
+}
+
+def refmapName = "${mod_id}.refmap.json"
+def generatedRefmap = layout.buildDirectory.file("tmp/compileJava/${refmapName}")
+def generatedMixinMappings = layout.buildDirectory.file('tmp/compileJava/mixin-mappings.tsrg')
+
+tasks.named('compileJava', JavaCompile).configure {
+    dependsOn 'createMcpToSrg'
+    options.encoding = 'UTF-8'
+    options.release = 17
+    doFirst {
+        options.compilerArgs += [
+            "-AreobfTsrgFile=${tasks.named('createMcpToSrg').get().outputs.files.singleFile.absolutePath}",
+            "-AoutTsrgFile=${generatedMixinMappings.get().asFile.absolutePath}",
+            "-AoutRefMapFile=${generatedRefmap.get().asFile.absolutePath}",
+            '-AmappingTypes=tsrg',
+            '-AdefaultObfuscationEnv=searge'
+        ]
+    }
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    inputs.properties version: project.version, mod_id: mod_id
+    filesMatching('META-INF/mods.toml') {
+        expand version: project.version, mod_id: mod_id
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    archiveFileName = "${mod_id}-${mod_version}-forge-${minecraft_version}.jar"
+    from(generatedRefmap) {
+        into ''
+    }
+    manifest.attributes('MixinConfigs': "${mod_id}.mixins.json")
+    finalizedBy 'reobfJar'
+}
+
+afterEvaluate {
+    tasks.named('reobfJar').configure {
+        extraMappings.from(generatedMixinMappings)
+    }
+}
