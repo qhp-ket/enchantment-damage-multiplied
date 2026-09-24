@@ -23,6 +23,10 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.5"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.5")) {
+        jarJar.ranged(it, "[0.5.5,)")
+    }
     annotationProcessor 'org.spongepowered:mixin:0.8.5'
     annotationProcessor 'com.google.code.gson:gson:2.10'
     annotationProcessor 'com.google.guava:guava:31.1-jre'
@@ -63,6 +67,13 @@ tasks.named('jar', Jar).configure {
     }
     manifest.attributes('MixinConfigs': "${mod_id}.mixins.json")
     finalizedBy 'reobfJar'
+}
+
+tasks.named('jarJar').configure {
+    dependsOn 'compileJava'
+    from(generatedRefmap) {
+        into ''
+    }
 }
 
 afterEvaluate {
