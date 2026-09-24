@@ -17,7 +17,8 @@ public abstract class PlayerAttackMixin {
             value = "INVOKE",
             target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getDamageBonus(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/MobType;)F"
         ),
-        require = 2
+        require = 1,
+        expect = 2
     )
     private float enchantmentDamageMultiplied$scaleBonus(ItemStack stack, MobType mobType) {
         float original = EnchantmentHelper.getDamageBonus(stack, mobType);
