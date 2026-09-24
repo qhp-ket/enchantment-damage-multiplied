@@ -12,6 +12,8 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+jarJar.enable()
+
 minecraft {
     mappings channel: 'official', version: minecraft_version
     copyIdeResources = true
@@ -61,7 +63,7 @@ tasks.named('processResources', ProcessResources).configure {
 }
 
 tasks.named('jar', Jar).configure {
-    archiveFileName = "${mod_id}-${mod_version}-forge-${minecraft_version}.jar"
+    archiveClassifier = 'slim'
     from(generatedRefmap) {
         into ''
     }
@@ -70,14 +72,24 @@ tasks.named('jar', Jar).configure {
 }
 
 tasks.named('jarJar').configure {
+    archiveClassifier = ''
     dependsOn 'compileJava'
     from(generatedRefmap) {
         into ''
     }
+    finalizedBy 'reobfJarJar'
+}
+
+tasks.named('assemble').configure {
+    dependsOn 'jarJar'
 }
 
 afterEvaluate {
     tasks.named('reobfJar').configure {
+        extraMappings.from(generatedMixinMappings)
+    }
+
+    tasks.named('reobfJarJar').configure {
         extraMappings.from(generatedMixinMappings)
     }
 }

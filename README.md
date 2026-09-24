@@ -17,4 +17,4 @@ applyMultiplyTotal = true
 
 This scales the bonus returned by the normal `EnchantmentHelper.getDamageBonus(ItemStack, MobType)` call inside `Player.attack`. Modded enchantments contributing through the same damage-bonus path are included automatically. Enchantments implementing their own damage path are outside this mod's scope. Projectile damage, including thrown tridents and arrows, is not handled. There is no config GUI.
 
-Build with Java 17 using `gradlew build`. The resulting JAR is in `build/libs`.
+Build with Java 17 using `gradlew build`. The complete release JAR (including the MixinExtras Jar-in-Jar dependency) is the JAR in `build/libs` without the `-slim` suffix. The `-slim` JAR does not bundle MixinExtras and is not the recommended release artifact.
